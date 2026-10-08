@@ -6,6 +6,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { PokemonModule } from './pokemon/pokemon.module.js';
 import { Connection } from 'mongoose';
 import { CommonModule } from './common/common.module.js';
+import { SeedModule } from './seed/seed.module.js';
 
 
 @Module({
@@ -25,7 +26,8 @@ import { CommonModule } from './common/common.module.js';
         return c;
       }
     }),
-    CommonModule
+    CommonModule,
+    SeedModule
   ],
 
 })

@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { CreatePokemonDto } from './dto/create-pokemon.dto.js';
@@ -27,13 +28,7 @@ export class PokemonService {
 
       return pokemon;
     } catch (error) {
-      if (error instanceof MongoServerError && error.code === 11000) {
-        throw new BadRequestException(
-          `Pokemon already exists: ${JSON.stringify(error.keyValue)}`,
-        );
-      }
-
-      throw error;
+      this.handleExceptions(error);
     }
   }
 
@@ -67,23 +62,53 @@ export class PokemonService {
     return pokemon;
   }
 
-  async update(id: string, updatePokemonDto: UpdatePokemonDto) {
-    const pokemon = await this.pokemonModel.findByIdAndUpdate(
-      id,
-      updatePokemonDto,
-      { new: true },
-    );
+  async update(term: string, updatePokemonDto: UpdatePokemonDto) {
+    const pokemon = await this.findOne(term);
 
-    if (!pokemon) {
-      throw new NotFoundException(`Pokemon with id: ${id} not found`);
+    if (updatePokemonDto.name) {
+      updatePokemonDto.name = updatePokemonDto.name.toLocaleLowerCase();
     }
 
-    return pokemon;
+    try {
+      await pokemon.updateOne(updatePokemonDto);
+      return { ...pokemon.toJSON(), ...updatePokemonDto };
+    } catch (error) {
+      this.handleExceptions(error);
+    }
   }
 
   async remove(id: string) {
-    await this.findOne(id);
+    // await this.findOne(id);
 
-    return this.pokemonModel.deleteOne({ _id: id });
+    // const result = await this.pokemonModel.findByIdAndDelete( id );
+
+    // if(!result){
+    //   throw new NotFoundException(
+    //   `Pokemon with id "${id}" not found`,
+    // );
+    // }
+
+    const { deletedCount } = await this.pokemonModel.deleteOne({ _id: id });
+
+    if (deletedCount === 0) {
+      throw new BadRequestException(`Pokemon with ${id} not found`);
+    }
+
+    return {
+      ok: true,
+      message: 'Pokemon deleted successfully',
+    };
+  }
+
+  private handleExceptions(error: any) {
+    if (error instanceof MongoServerError && error.code === 11000) {
+      throw new BadRequestException(
+        `Pokemon already exists: ${JSON.stringify(error.keyValue)}`,
+      );
+    }
+
+    throw new InternalServerErrorException(
+      `Can't create Pokemon - Check server logs`,
+    );
   }
 }

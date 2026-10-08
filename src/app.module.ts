@@ -5,6 +5,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 
 import { PokemonModule } from './pokemon/pokemon.module.js';
 import { Connection } from 'mongoose';
+import { CommonModule } from './common/common.module.js';
 
 
 @Module({
@@ -23,7 +24,8 @@ import { Connection } from 'mongoose';
 
         return c;
       }
-    })
+    }),
+    CommonModule
   ],
 
 })

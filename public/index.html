@@ -1,117 +1,133 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <meta
       name="description"
-      content="Pokédex - Explora información de tus Pokémon favoritos."
+      content="Explore the Pokémon world with your own Pokédex. Discover Pokémon artwork, search the collection, and browse with pagination."
     />
-
-    <title>Pokédex</title>
-
+    <meta name="theme-color" content="#10131c" />
+    <title>Pokédex — Explore the Pokémon World</title>
     <link rel="stylesheet" href="./css/styles.css" />
+    <script src="./js/app.js" defer></script>
   </head>
-
   <body>
-    <header class="header">
-      <div class="container">
-        <a href="/" class="logo">Pokédex</a>
-
-        <nav class="nav">
-          <a href="#pokemon">Pokémon</a>
-          <a href="#about">Acerca de</a>
+    <header class="site-header">
+      <div class="container nav-shell">
+        <a class="brand" href="#top" aria-label="Pokédex home">
+          <span class="brand-mark" aria-hidden="true"><span></span></span>
+          <span>Poké<span class="brand-accent">dex</span></span>
+        </a>
+        <nav class="main-nav" aria-label="Main navigation">
+          <a class="nav-link active" href="#pokemon">Pokédex</a>
+          <a class="nav-link" href="#about">About</a>
         </nav>
+        <a class="header-pill" href="#pokemon"><span class="online-dot"></span> Live collection</a>
       </div>
     </header>
 
-    <main>
+    <main id="top">
       <section class="hero">
-        <div class="container hero-content">
-          <span class="hero-label">Pokémon Database</span>
-
-          <h1>
-            Explora el mundo
-            <span>Pokémon</span>
-          </h1>
-
-          <p>
-            Descubre información, estadísticas y características de tus Pokémon
-            favoritos.
-          </p>
-
-          <a href="#pokemon" class="button"> Explorar Pokémon </a>
+        <div class="hero-orb orb-one" aria-hidden="true"></div>
+        <div class="hero-orb orb-two" aria-hidden="true"></div>
+        <div class="container hero-layout">
+          <div class="hero-copy">
+            <div class="eyebrow"><span class="eyebrow-line"></span> YOUR PERSONAL POKÉMON DATABASE</div>
+            <h1>Discover the<br />world of <span>Pokémon.</span></h1>
+            <p class="hero-description">
+              Explore the collection, find your favorites, and discover a new
+              Pokémon every day.
+            </p>
+            <a class="primary-button" href="#pokemon">Explore the Pokédex <span aria-hidden="true">↘</span></a>
+            <div class="hero-footnote"><span class="tiny-sparkle" aria-hidden="true">✦</span> Powered by your own NestJS API</div>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <div class="hero-art-ring ring-outer"></div>
+            <div class="hero-art-ring ring-inner"></div>
+            <div class="hero-pokeball"><div class="pokeball-top"></div><div class="pokeball-middle"></div><div class="pokeball-center"><span></span></div></div>
+            <div class="floating-chip chip-api"><span class="chip-icon">⌘</span><span><strong>YOUR API</strong><small>NestJS · MongoDB</small></span></div>
+            <div class="floating-chip chip-data"><span class="chip-status"></span><span><strong>LIVE DATA</strong><small>Loaded on demand</small></span></div>
+            <div class="hero-plus plus-one">+</div><div class="hero-plus plus-two">+</div>
+          </div>
         </div>
+        <div class="hero-bottom-line" aria-hidden="true"></div>
       </section>
 
-      <section id="pokemon" class="pokemon-section">
+      <section id="pokemon" class="collection-section">
         <div class="container">
-          <div class="section-heading">
-            <span class="section-label">Pokédex</span>
-            <h2>Pokémon disponibles</h2>
-            <p>Consulta la información de cada Pokémon.</p>
+          <div class="section-topline"><span class="section-kicker">THE COLLECTION</span><span class="section-decoration">01 <i></i> EXPLORE</span></div>
+          <div class="section-heading-row">
+            <div class="section-heading">
+              <h2>Find your <span>Pokémon.</span></h2>
+              <p>Browse the collection stored in your Pokédex database.</p>
+            </div>
+            <div class="collection-stat"><span class="stat-dot"></span><span id="collection-status">Connecting to Pokédex API</span></div>
           </div>
 
-          <div class="pokemon-grid">
-            <article class="pokemon-card">
-              <div class="pokemon-image">
-                <span>#001</span>
-                <div class="pokemon-placeholder">?</div>
-              </div>
+          <div class="control-panel">
+            <div class="search-wrap">
+              <label class="control-label" for="pokemon-search">QUICK SEARCH <span>(CURRENT PAGE)</span></label>
+              <div class="search-input-wrap"><span class="search-icon" aria-hidden="true">⌕</span><input id="pokemon-search" type="search" placeholder="Search by name or number..." autocomplete="off" spellcheck="false" /><kbd>/</kbd></div>
+            </div>
+            <div class="page-size-wrap">
+              <label class="control-label" for="page-size">POKÉMON PER PAGE</label>
+              <input
+                id="page-size"
+                class="number-control"
+                type="number"
+                min="1"
+                max="100"
+                step="1"
+                value="12"
+                inputmode="numeric"
+                aria-describedby="page-size-hint"
+              />
+              <span id="page-size-hint" class="field-hint">Enter a number from 1 to 100</span>
+            </div>
+          </div>
 
-              <div class="pokemon-info">
-                <span class="pokemon-number">#001</span>
-                <h3>Bulbasaur</h3>
+          <div class="pagination-panel" aria-label="Pagination controls">
+            <div class="pagination-info">
+              <span class="pagination-label">REQUEST PARAMETERS</span>
+              <div class="parameter-readout"><span>limit <b id="current-limit">12</b></span><span class="parameter-separator">/</span><span>offset <b id="current-offset">0</b></span><span class="page-badge" id="current-page">PAGE 1</span></div>
+            </div>
+            <form id="offset-form" class="offset-form">
+              <label for="offset-input">Jump to offset</label>
+              <input id="offset-input" type="number" min="0" step="1" value="0" inputmode="numeric" />
+              <button class="secondary-button" type="submit">Go</button>
+            </form>
+            <div class="pagination-buttons">
+              <button id="previous-page" class="page-button" type="button" disabled><span aria-hidden="true">←</span> Previous</button>
+              <button id="next-page" class="page-button page-button-next" type="button" disabled>Next <span aria-hidden="true">→</span></button>
+            </div>
+          </div>
 
-                <div class="pokemon-types">
-                  <span class="type type-grass">Grass</span>
-                  <span class="type type-poison">Poison</span>
-                </div>
-              </div>
-            </article>
+          <div id="pokemon-status" class="status-panel" role="status" aria-live="polite">
+            <span class="loading-spinner" aria-hidden="true"></span>
+            <span id="pokemon-status-message">Loading Pokémon from your database...</span>
+          </div>
 
-            <article class="pokemon-card">
-              <div class="pokemon-image">
-                <span>#004</span>
-                <div class="pokemon-placeholder">?</div>
-              </div>
+          <div id="pokemon-grid" class="pokemon-grid" aria-label="Pokémon collection"></div>
 
-              <div class="pokemon-info">
-                <span class="pokemon-number">#004</span>
-                <h3>Charmander</h3>
-
-                <div class="pokemon-types">
-                  <span class="type type-fire">Fire</span>
-                </div>
-              </div>
-            </article>
-
-            <article class="pokemon-card">
-              <div class="pokemon-image">
-                <span>#007</span>
-                <div class="pokemon-placeholder">?</div>
-              </div>
-
-              <div class="pokemon-info">
-                <span class="pokemon-number">#007</span>
-                <h3>Squirtle</h3>
-
-                <div class="pokemon-types">
-                  <span class="type type-water">Water</span>
-                </div>
-              </div>
-            </article>
+          <div class="bottom-pagination">
+            <span id="result-summary">Waiting for data...</span>
+            <div class="bottom-pagination-actions">
+              <button id="previous-page-bottom" class="text-button" type="button" disabled>← Previous</button>
+              <button id="next-page-bottom" class="text-button" type="button" disabled>Next →</button>
+            </div>
           </div>
         </div>
       </section>
     </main>
 
-    <footer id="about" class="footer">
-      <div class="container">
-        <p>Pokédex © 2026</p>
+    <footer id="about" class="site-footer">
+      <div class="container footer-content">
+        <a class="brand footer-brand" href="#top"><span class="brand-mark" aria-hidden="true"><span></span></span><span>Poké<span class="brand-accent">dex</span></span></a>
+        <p>A personal project built with NestJS, MongoDB, HTML, CSS, and JavaScript.</p>
+        <span class="footer-copyright">© 2026 POKÉDEX PROJECT</span>
       </div>
+      <div class="container legal-note">Pokémon and Pokémon character names are trademarks of Nintendo, Game Freak, and The Pokémon Company. This project is a fan-made, non-commercial interface.</div>
     </footer>
   </body>
 </html>
-```

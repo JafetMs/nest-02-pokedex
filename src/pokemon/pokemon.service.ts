@@ -1,3 +1,4 @@
+import { PaginationDto } from './../common/dto/pagination.dto.js'
 import {
   BadRequestException,
   Injectable,
@@ -10,8 +11,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { MongoServerError } from 'mongodb';
 import { Pokemon } from './entities/pokemon.entity.js';
 import { isValidObjectId, Model } from 'mongoose';
-import { throwError } from 'rxjs';
-import { json } from 'stream/consumers';
+
 
 @Injectable()
 export class PokemonService {
@@ -32,8 +32,18 @@ export class PokemonService {
     }
   }
 
-  async findAll() {
-    return await this.pokemonModel.find().exec();
+
+
+  async findAll(paginationDto:PaginationDto) {
+
+    const { limit = 10, offset = 0} = paginationDto;
+    return await this.pokemonModel.find()
+    .limit(limit)
+    .skip(offset)
+    .sort({
+      no:1
+    })
+    .select('-__v');
   }
 
   async findOne(term: string) {

@@ -2,7 +2,7 @@
 
 // This frontend is served by NestJS, so the API uses the same origin.
 // The backend has the global prefix "api/v2".
-const API_URL = '/api/v2/pokemon';
+const API_URL = 'http://localhost:3000/api/v2/pokemon';
 
 const ARTWORK_URL =
   'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork';

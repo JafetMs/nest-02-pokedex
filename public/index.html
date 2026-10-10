@@ -68,7 +68,11 @@
           <div class="control-panel">
             <div class="search-wrap">
               <label class="control-label" for="pokemon-search">QUICK SEARCH <span>(CURRENT PAGE)</span></label>
-              <div class="search-input-wrap"><span class="search-icon" aria-hidden="true">⌕</span><input id="pokemon-search" type="search" placeholder="Search by name or number..." autocomplete="off" spellcheck="false" /><kbd>/</kbd></div>
+              <div class="search-input-wrap">
+                <span class="search-icon" aria-hidden="true">⌕</span>
+                <input id="pokemon-search" type="search" placeholder="Search by name or number..." autocomplete="off" spellcheck="false" />
+                <kbd>/</kbd>
+              </div>
             </div>
             <div class="page-size-wrap">
               <label class="control-label" for="page-size">POKÉMON PER PAGE</label>
@@ -90,7 +94,12 @@
           <div class="pagination-panel" aria-label="Pagination controls">
             <div class="pagination-info">
               <span class="pagination-label">REQUEST PARAMETERS</span>
-              <div class="parameter-readout"><span>limit <b id="current-limit">12</b></span><span class="parameter-separator">/</span><span>offset <b id="current-offset">0</b></span><span class="page-badge" id="current-page">PAGE 1</span></div>
+              <div class="parameter-readout">
+                <span>limit <b id="current-limit">12</b></span>
+                <span class="parameter-separator">/</span>
+                <span>offset <b id="current-offset">0</b></span>
+                <span class="page-badge" id="current-page">PAGE 1</span>
+              </div>
             </div>
             <form id="offset-form" class="offset-form">
               <label for="offset-input">Jump to offset</label>
